@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: true,
 })
 export class HeavyComputationPipe implements PipeTransform {
-  transform(name: string, ...[index]: string | number[]) {
+  transform(name: string, ...[index]: [number]) {
     return `${name} - ${index}`;
   }
 }
