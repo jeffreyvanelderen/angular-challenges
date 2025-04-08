@@ -1,21 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
-import { randStudent, randTeacher } from '../../data-access/fake-http.service';
-import { StudentStore } from '../../data-access/student.store';
-import { TeacherStore } from '../../data-access/teacher.store';
-import { CardType } from '../../model/card.model';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 import { ListItemComponent } from '../list-item/list-item.component';
-
-/*
-
-      @if (type() === CardType.TEACHER) {
-        <img ngSrc="assets/img/teacher.png" width="200" height="200" />
-      }
-      @if (type() === CardType.STUDENT) {
-        <img ngSrc="assets/img/student.webp" width="200" height="200" />
-      }
-
-*/
 
 @Component({
   selector: 'app-card',
@@ -29,7 +14,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
           <app-list-item
             [name]="item.firstName"
             [id]="item.id"
-            [type]="type()"></app-list-item>
+            (onDelete)="onDelete($event)"></app-list-item>
         }
       </section>
 
@@ -43,21 +28,17 @@ import { ListItemComponent } from '../list-item/list-item.component';
   imports: [ListItemComponent, NgOptimizedImage],
 })
 export class CardComponent {
-  private teacherStore = inject(TeacherStore);
-  private studentStore = inject(StudentStore);
-
   readonly list = input<any[] | null>(null);
-  readonly type = input.required<CardType>();
   readonly customClass = input('');
 
-  CardType = CardType;
+  @Output() onAddNewItem: EventEmitter<null> = new EventEmitter<null>();
+  @Output() onDeleteItem: EventEmitter<number> = new EventEmitter<number>();
 
   addNewItem() {
-    const type = this.type();
-    if (type === CardType.TEACHER) {
-      this.teacherStore.addOne(randTeacher());
-    } else if (type === CardType.STUDENT) {
-      this.studentStore.addOne(randStudent());
-    }
+    this.onAddNewItem.emit();
+  }
+
+  onDelete(id: number) {
+    this.onDeleteItem.emit(id);
   }
 }
