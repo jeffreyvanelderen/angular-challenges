@@ -6,12 +6,8 @@ import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
 import { ListItemComponent } from '../list-item/list-item.component';
 
-@Component({
-  selector: 'app-card',
-  template: `
-    <div
-      class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
-      [class]="customClass()">
+/*
+
       @if (type() === CardType.TEACHER) {
         <img ngSrc="assets/img/teacher.png" width="200" height="200" />
       }
@@ -19,6 +15,15 @@ import { ListItemComponent } from '../list-item/list-item.component';
         <img ngSrc="assets/img/student.webp" width="200" height="200" />
       }
 
+*/
+
+@Component({
+  selector: 'app-card',
+  template: `
+    <div
+      class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
+      [class]="customClass()">
+      <ng-content select="card-image" />
       <section>
         @for (item of list(); track item) {
           <app-list-item

@@ -7,10 +7,13 @@ import { CardComponent } from '../../ui/card/card.component';
 @Component({
   selector: 'app-teacher-card',
   template: `
-    <app-card
-      [list]="teachers()"
-      [type]="cardType"
-      customClass="bg-light-red"></app-card>
+    <app-card [list]="teachers()" [type]="cardType" customClass="bg-light-red">
+      <img
+        ngProjectAs="card-image"
+        src="assets/img/teacher.png"
+        width="200"
+        height="200" />
+    </app-card>
   `,
   styles: [
     `

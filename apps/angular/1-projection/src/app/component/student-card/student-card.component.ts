@@ -15,7 +15,13 @@ import { CardComponent } from '../../ui/card/card.component';
     <app-card
       [list]="students()"
       [type]="cardType"
-      customClass="bg-light-green" />
+      customClass="bg-light-green">
+      <img
+        ngProjectAs="card-image"
+        src="assets/img/student.webp"
+        width="200"
+        height="200" />
+    </app-card>
   `,
   styles: [
     `
