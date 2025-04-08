@@ -18,6 +18,7 @@ import { CardComponent } from '../../ui/card/card.component';
       [list]="students()"
       (onAddNewItem)="onAddNewItem()"
       (onDeleteItem)="onDeleteItem($event)"
+      listItemTitle="firstName"
       customClass="bg-light-green">
       <img
         ngProjectAs="card-image"

@@ -12,7 +12,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
       <section>
         @for (item of list(); track item) {
           <app-list-item
-            [name]="item.firstName"
+            [name]="item[listItemTitle()]"
             [id]="item.id"
             (onDelete)="onDelete($event)"></app-list-item>
         }
@@ -30,6 +30,8 @@ import { ListItemComponent } from '../list-item/list-item.component';
 export class CardComponent {
   readonly list = input<any[] | null>(null);
   readonly customClass = input('');
+
+  readonly listItemTitle = input('');
 
   @Output() onAddNewItem: EventEmitter<null> = new EventEmitter<null>();
   @Output() onDeleteItem: EventEmitter<number> = new EventEmitter<number>();

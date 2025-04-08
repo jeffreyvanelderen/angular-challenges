@@ -12,6 +12,7 @@ import { CardComponent } from '../../ui/card/card.component';
     <app-card
       [list]="teachers()"
       customClass="bg-light-red"
+      listItemTitle="firstName"
       (onAddNewItem)="onAddNewItem()"
       (onDeleteItem)="onDeleteItem($event)">
       <img
