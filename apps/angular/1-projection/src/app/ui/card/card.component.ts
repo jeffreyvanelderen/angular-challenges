@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { Component, EventEmitter, input, Output } from '@angular/core';
 import { ListItemComponent } from '../list-item/list-item.component';
 
@@ -25,7 +24,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
       </button>
     </div>
   `,
-  imports: [ListItemComponent, NgOptimizedImage],
+  imports: [ListItemComponent],
 })
 export class CardComponent {
   readonly list = input<any[] | null>(null);
