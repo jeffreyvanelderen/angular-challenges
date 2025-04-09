@@ -8,8 +8,9 @@ export const appRoutes: Route[] = [
   {
     path: 'subscription/:testId',
     loadComponent: () => import('./test.component'),
-    data: {
-      permission: 'admin',
-    },
+    // This is static data. You can also pass dynamic data (see component passing [state])
+    // data: {
+    //   permission: 'admin',
+    // },
   },
 ];
