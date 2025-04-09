@@ -58,7 +58,7 @@ export default class TestComponent {
   // Option 3. Add withComponentInputBinding() in app.config.ts to allow using @Input() to bind
   // query params, route params and data objects directly to the variables declared here!
   // When the parameters change, these will also be updated!
-  @Input() testId!: string;
+  @Input() testId!: string; // The name needs to be the same as the one you put in the path in app.routes.ts! -> 'subscription/:testId'
   @Input() permission!: string;
   @Input() user!: string;
 
