@@ -62,6 +62,9 @@ export default class TestComponent {
   @Input() permission!: string;
   @Input() user!: string;
 
+  // with signals
+  // productId = input<string>();
+
   constructor(private activatedRoute: ActivatedRoute) {
     // Option 1. You can take a snapshot, which is a static 'screenshot' of the paramaters at a certain point in time. You will not be notified if the parameters change.
     this.snapshotTestId = +this.activatedRoute.snapshot.params['testId'];
