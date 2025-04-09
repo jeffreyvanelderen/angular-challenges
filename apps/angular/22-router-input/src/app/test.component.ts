@@ -58,11 +58,11 @@ export default class TestComponent {
   // Option 3. Add withComponentInputBinding() in app.config.ts to allow using @Input() to bind
   // query params, route params and data objects directly to the variables declared here!
   // When the parameters change, these will also be updated!
-  @Input() testId!: string; // The name needs to be the same as the one you put in the path in app.routes.ts! -> 'subscription/:testId'
+  @Input({ transform: (value: string) => +value }) testId!: number; // The name needs to be the same as the one you put in the path in app.routes.ts! -> 'subscription/:testId'
   @Input() permission!: string;
   @Input() user!: string;
 
-  // with signals
+  // If you don’t need to perform any operation on the input (such as converting its type for example), prefer the more modern signal input() instead of the classic @Input()
   // productId = input<string>();
 
   constructor(private activatedRoute: ActivatedRoute) {
