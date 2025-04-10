@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-input',
@@ -21,7 +22,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         (keydown)="handleKey($event)" />
     </mat-form-field>
   `,
-  imports: [MatFormFieldModule, CommonModule, FormsModule],
+  imports: [
+    MatFormFieldModule,
+    CommonModule,
+    FormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent {

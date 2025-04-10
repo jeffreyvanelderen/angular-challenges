@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  Input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { CDFlashingDirective } from '@angular-challenges/shared/directives';
 import { CommonModule } from '@angular/common';
@@ -14,7 +7,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import { InputComponent } from './input.component';
 
 @Component({
   selector: 'app-person-list',
@@ -26,17 +18,16 @@ import { InputComponent } from './input.component';
     MatInputModule,
     MatChipsModule,
     CDFlashingDirective,
-    InputComponent,
   ],
   template: `
     <h1 cd-flash class="text-center font-semibold" title="Title">
-      {{ title | titlecase }}
+      {{ title() | titlecase }}
     </h1>
 
-    <app-input (enterName)="newName.set($event)" />
-
     <mat-list class="flex w-full">
-      <div *ngIf="names?.length === 0" class="empty-list-label">Empty list</div>
+      <div *ngIf="names()?.length === 0" class="empty-list-label">
+        Empty list
+      </div>
       <mat-list-item
         *ngFor="let name of names()"
         cd-flash
@@ -47,7 +38,7 @@ import { InputComponent } from './input.component';
           </h3>
         </div>
       </mat-list-item>
-      <mat-divider *ngIf="names?.length !== 0"></mat-divider>
+      <mat-divider *ngIf="names()?.length !== 0"></mat-divider>
     </mat-list>
   `,
   host: {
@@ -56,20 +47,6 @@ import { InputComponent } from './input.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PersonListComponent {
-  readonly initialList = input.required<string[]>();
-  @Input() title = '';
-
-  newName = signal<string>('');
-  names = computed<string[]>(() => {
-    const actualNewName = this.newName();
-
-    if (actualNewName.length > 0) {
-      // Clear
-      this.newName.set('');
-
-      return [actualNewName, ...this.initialList()];
-    }
-
-    return this.initialList();
-  });
+  readonly title = input.required<string>();
+  readonly names = input.required<string[]>();
 }
