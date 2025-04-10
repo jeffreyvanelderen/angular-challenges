@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { randFirstName } from '@ngneat/falso';
 import { PersonListComponent } from './person-list.component';
 import { RandomComponent } from './random.component';
@@ -10,12 +10,13 @@ import { RandomComponent } from './random.component';
     <app-random />
 
     <div class="flex">
-      <app-person-list [names]="girlList" title="Female" />
-      <app-person-list [names]="boyList" title="Male" />
+      <app-person-list [initialList]="girlList()" title="Female" />
+      <app-person-list [initialList]="boyList()" title="Male" />
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  girlList = randFirstName({ gender: 'female', length: 10 });
-  boyList = randFirstName({ gender: 'male', length: 10 });
+  girlList = signal(randFirstName({ gender: 'female', length: 10 }));
+  boyList = signal(randFirstName({ gender: 'male', length: 10 }));
 }
