@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,8 @@ import { Person } from './person.model';
         placeholder="Add one member to the list"
         matInput
         type="text"
-        [(ngModel)]="label" />
+        [(ngModel)]="label"
+        (keydown)="onKeyPress($event)" />
     </mat-form-field>
 
     <mat-list class="flex w-full">
@@ -50,5 +51,14 @@ export class PersonListComponent {
   @Input() persons: Person[] = [];
   @Input() title = '';
 
+  @Output() onAddPerson = new EventEmitter<string>();
+
   label = '';
+
+  onKeyPress($event: KeyboardEvent) {
+    if ($event.key === 'Enter' && this.label.length > 0) {
+      this.onAddPerson.emit(this.label);
+      this.label = '';
+    }
+  }
 }
