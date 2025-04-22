@@ -14,15 +14,15 @@ import { RandomComponent } from './random.component';
   selector: 'app-root',
   template: `
     <app-random />
-
     <div class="flex">
-      <app-input (enterName)="onEnteredName(this.girlList, $event)" />
-      <app-input (enterName)="onEnteredName(this.boyList, $event)" />
-    </div>
-
-    <div class="flex">
-      <app-person-list [names]="girlList()" title="Female" />
-      <app-person-list [names]="boyList()" title="Male" />
+      <app-person-list
+        [names]="girlList()"
+        (onEnterName)="onEnteredName(girlList, $event)"
+        title="Female" />
+      <app-person-list
+        [names]="boyList()"
+        (onEnterName)="onEnteredName(boyList, $event)"
+        title="Male" />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
