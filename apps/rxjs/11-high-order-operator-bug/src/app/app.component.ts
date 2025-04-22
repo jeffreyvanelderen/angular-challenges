@@ -22,9 +22,9 @@ export class ButtonDeleteComponent {
     this.service
       .deleteOldTopics(this.topic())
       .pipe(take(1))
-      .subscribe((result) =>
+      .subscribe((didDeleteAll) =>
         this.message.set(
-          result
+          didDeleteAll
             ? `All ${this.topic()} have been deleted`
             : `Error: deletion of some ${this.topic()} failed`,
         ),
