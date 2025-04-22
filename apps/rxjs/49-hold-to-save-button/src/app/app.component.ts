@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { delay, Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { delay, Subject, Subscription } from 'rxjs';
 
-const STAND_BY = -1;
 const START = 0;
 
 // Milliseconds
@@ -30,34 +29,16 @@ const DELAY = 25;
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   subject$ = new Subject<number>();
-
-  ngOnInit(): void {
-    this.subject$.pipe(delay(DELAY)).subscribe((value) => {
-      console.log(`value`, value);
-      if (value === STAND_BY) {
-        // Do nothing
-        this.subject$.complete();
-        return;
-      }
-
-      const nextValue = value + 1;
-      if (nextValue < 100) {
-        this.subject$.next(nextValue);
-        return;
-      }
-      // TODO Done!
-      this.onSend();
-    });
-  }
+  subscription: Subscription | undefined;
 
   onSend() {
     alert(`Done, saved.`);
   }
 
   cancelCounter() {
-    this.subject$.next(STAND_BY);
+    this.subscription?.unsubscribe();
   }
 
   onMouseUp() {
@@ -72,6 +53,21 @@ export class AppComponent implements OnInit {
 
   onMouseDown() {
     console.log(`onMouseDown`);
+
+    // Subscribe to future values
+    this.subscription = this.subject$.pipe(delay(DELAY)).subscribe((value) => {
+      console.log(`value`, value);
+
+      const nextValue = value + 1;
+      if (nextValue < 100) {
+        this.subject$.next(nextValue);
+        return;
+      }
+      // TODO Done!
+      this.onSend();
+    });
+
+    // Get the ball rolling, starting with 0
     this.subject$.next(START);
   }
 }
