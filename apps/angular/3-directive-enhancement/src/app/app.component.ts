@@ -1,19 +1,17 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CustomNgForDirective } from './directive/custom-ng-for.directive';
 
 interface Person {
   name: string;
 }
 
 @Component({
-  imports: [NgFor, NgIf],
+  imports: [CustomNgForDirective],
   selector: 'app-root',
   template: `
-    <ng-container *ngIf="persons.length > 0; else emptyList">
-      <div *ngFor="let person of persons">
-        {{ person.name }}
-      </div>
-    </ng-container>
+    <div *ngFor="let person of persons; empty: emptyList">
+      {{ person.name }}
+    </div>
     <ng-template #emptyList>The list is empty !!</ng-template>
   `,
   styles: [],
