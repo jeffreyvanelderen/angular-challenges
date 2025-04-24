@@ -20,7 +20,8 @@ interface MenuItem {
   selector: 'app-nav',
   imports: [RouterLink, RouterLinkActive, NgFor],
   template: `
-    <ng-container *ngFor="let menu of menus">
+    <!-- ALWAYS use trackBy - which also fixes the change detection cycle -->
+    <ng-container *ngFor="let menu of menus; trackBy: getMenuTrackBy">
       <a
         class="rounded-md border px-4 py-2"
         [routerLink]="menu.path"
@@ -42,6 +43,10 @@ interface MenuItem {
 })
 export class NavigationComponent {
   @Input() menus!: MenuItem[];
+
+  getMenuTrackBy(_: number, value: MenuItem) {
+    return value.path;
+  }
 }
 
 @Component({
