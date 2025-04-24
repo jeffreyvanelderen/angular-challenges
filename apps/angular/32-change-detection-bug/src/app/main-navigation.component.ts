@@ -1,6 +1,14 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FakeServiceService } from './fake.service';
 
 interface MenuItem {
@@ -37,29 +45,43 @@ export class NavigationComponent {
 }
 
 @Component({
-  imports: [NavigationComponent, NgIf, AsyncPipe],
+  imports: [NavigationComponent, NgIf],
   template: `
-    <ng-container *ngIf="info$ | async as info">
+    <ng-container *ngIf="info">
       <ng-container *ngIf="info !== null; else noInfo">
-        <app-nav [menus]="getMenu(info)" />
+        <app-nav [menus]="menu()" />
       </ng-container>
     </ng-container>
 
     <ng-template #noInfo>
-      <app-nav [menus]="getMenu('')" />
+      <app-nav [menus]="menu()" />
     </ng-template>
   `,
   host: {},
 })
-export class MainNavigationComponent {
+export class MainNavigationComponent implements OnDestroy {
   private fakeBackend = inject(FakeServiceService);
 
+  info = signal('');
   readonly info$ = this.fakeBackend.getInfoFromBackend();
 
-  getMenu(prop: string) {
-    return [
-      { path: '/foo', name: `Foo ${prop}` },
-      { path: '/bar', name: `Bar ${prop}` },
-    ];
+  subscriptions: Subscription[] = [];
+
+  menu = computed(() => [
+    { path: '/foo', name: `Foo ${this.info()}` },
+    { path: '/bar', name: `Bar` },
+  ]);
+
+  constructor() {
+    this.subscriptions.push(
+      this.info$.subscribe((newInfo) => {
+        this.info.set(newInfo);
+        console.log(`New info was set: ${newInfo}`);
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
