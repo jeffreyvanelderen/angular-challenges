@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
-import { DEFAULT_TIMER } from './data';
+import { injectTimerState } from './data';
 
 @Component({
   selector: 'timer',
@@ -11,5 +11,7 @@ import { DEFAULT_TIMER } from './data';
   `,
 })
 export class TimerComponent {
-  timer = toSignal(interval(DEFAULT_TIMER));
+  injectedState = injectTimerState({ optional: false }); // Inject duration, which is set via the parent components
+
+  timer = toSignal(interval(this.injectedState?.timer));
 }
