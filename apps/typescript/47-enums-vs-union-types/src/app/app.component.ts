@@ -5,10 +5,7 @@ enum Difficulty {
   NORMAL = 'normal',
 }
 
-enum Direction {
-  LEFT = 'left',
-  RIGHT = 'right',
-}
+type Direction = 'left' | 'right';
 
 @Component({
   imports: [],
@@ -28,10 +25,8 @@ enum Direction {
 
     <section>
       <div>
-        <button mat-stroked-button (click)="direction.set(Direction.LEFT)">
-          Left
-        </button>
-        <button mat-stroked-button (click)="direction.set(Direction.RIGHT)">
+        <button mat-stroked-button (click)="direction.set('left')">Left</button>
+        <button mat-stroked-button (click)="direction.set('right')">
           Right
         </button>
       </div>
@@ -56,7 +51,6 @@ export class AppComponent {
   readonly Difficulty = Difficulty;
   readonly difficulty = signal<Difficulty>(Difficulty.EASY);
 
-  readonly Direction = Direction;
   readonly direction = signal<Direction | undefined>(undefined);
 
   readonly difficultyLabel = computed<string>(() => {
@@ -71,10 +65,9 @@ export class AppComponent {
   readonly directionLabel = computed<string>(() => {
     const prefix = 'You chose to go';
     switch (this.direction()) {
-      case Direction.LEFT:
-        return `${prefix} ${Direction.LEFT}`;
-      case Direction.RIGHT:
-        return `${prefix} ${Direction.RIGHT}`;
+      case 'left':
+      case 'right':
+        return `${prefix} ${this.direction()}`;
       default:
         return 'Choose a direction!';
     }
