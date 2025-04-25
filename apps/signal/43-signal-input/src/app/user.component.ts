@@ -28,10 +28,15 @@ const ageToCategory = (age: number): Category => {
 export class UserComponent {
   name = input.required<string>();
   lastName = input<string>('');
-  age = input<number, unknown>(0, {
-    transform: (val: unknown): number => (val ? +val : 0),
+  age = input<number, string>(0, {
+    transform: tryParseNumber,
   });
 
   fullName = computed<string>(() => `${this.name()} ${this.lastName()}`);
   category = computed<Category>(() => ageToCategory(+this.age()));
 }
+
+const tryParseNumber = (value: string): number => {
+  const num = Number.parseInt(value);
+  return Number.isNaN(num) ? 0 : num;
+};
