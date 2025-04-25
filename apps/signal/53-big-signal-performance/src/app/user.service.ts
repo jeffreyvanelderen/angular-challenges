@@ -2,15 +2,13 @@ import { Injectable, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class UserStore {
-  user = signal({
-    name: 'Bob',
-    address: {
-      street: '',
-      zipCode: '',
-      city: '',
-    },
-    note: '',
-    title: '',
-    salary: 0,
+  name = signal('Bob');
+  note = signal('');
+  title = signal('');
+  salary = signal(0);
+  address = signal({
+    street: '',
+    zipCode: '',
+    city: '',
   });
 }
