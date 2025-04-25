@@ -4,6 +4,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from './user.service';
@@ -22,7 +23,7 @@ import { UserService } from './user.service';
         id="actions"
         class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500">
         <option selected>Please select an action</option>
-        @for (action of actions; track $index) {
+        @for (action of actions; track action) {
           <option value="{{ action }}">{{ action }}</option>
         }
       </select>
@@ -38,7 +39,10 @@ export class ActionsComponent {
 
   constructor() {
     effect(() => {
-      this.userService.log(this.action() ?? 'No action selected');
+      const action = this.action() ?? 'No action selected';
+
+      // Untrack function! -> Execute an arbitrary function in a non-reactive (non-tracking) context
+      untracked(() => this.userService.log(action));
     });
   }
 }
