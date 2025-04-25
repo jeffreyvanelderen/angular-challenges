@@ -1,9 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 
-enum Difficulty {
-  EASY = 'easy',
-  NORMAL = 'normal',
-}
+type Difficulty = 'easy' | 'normal';
 
 type Direction = 'left' | 'right';
 
@@ -13,10 +10,10 @@ type Direction = 'left' | 'right';
   template: `
     <section>
       <div>
-        <button mat-stroked-button (click)="difficulty.set(Difficulty.EASY)">
+        <button mat-stroked-button (click)="difficulty.set('easy')">
           Easy
         </button>
-        <button mat-stroked-button (click)="difficulty.set(Difficulty.NORMAL)">
+        <button mat-stroked-button (click)="difficulty.set('normal')">
           Normal
         </button>
       </div>
@@ -48,28 +45,19 @@ type Direction = 'left' | 'right';
   `,
 })
 export class AppComponent {
-  readonly Difficulty = Difficulty;
-  readonly difficulty = signal<Difficulty>(Difficulty.EASY);
+  readonly difficulty = signal<Difficulty>('easy');
 
   readonly direction = signal<Direction | undefined>(undefined);
 
-  readonly difficultyLabel = computed<string>(() => {
-    switch (this.difficulty()) {
-      case Difficulty.EASY:
-        return Difficulty.EASY;
-      case Difficulty.NORMAL:
-        return Difficulty.NORMAL;
-    }
-  });
+  readonly difficultyLabel = computed<string>(() => this.difficulty());
 
   readonly directionLabel = computed<string>(() => {
     const prefix = 'You chose to go';
-    switch (this.direction()) {
-      case 'left':
-      case 'right':
-        return `${prefix} ${this.direction()}`;
-      default:
-        return 'Choose a direction!';
+
+    if (this.direction()) {
+      return `${prefix} ${this.direction()}`;
     }
+
+    return 'Choose a direction!';
   });
 }
