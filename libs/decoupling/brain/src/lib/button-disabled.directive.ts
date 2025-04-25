@@ -26,6 +26,7 @@ import { Directive, WritableSignal, forwardRef, signal } from '@angular/core';
   ],
 })
 export class BtnDisabledDirective {
+  // This is the actual state the injection token is referring to, the name should be the same as stated in the button.state.ts file
   state: WritableSignal<ButtonType> = signal(ButtonType.ENABLED);
 
   toggleState() {
