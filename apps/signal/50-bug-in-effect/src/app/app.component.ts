@@ -40,11 +40,23 @@ export class AppComponent {
   gpu = model(false);
 
   constructor() {
-    /* 
-      Explain for your junior team mate why this bug occurs ...
-    */
+    // Effect does not work as you'd expect! Not the same as in React!
+
     effect(() => {
-      if (this.drive() || this.ram() || this.gpu()) {
+      // This console logs also fixed the bug...
+      // console.log(`EFFECT!`, this.drive(), this.ram(), this.gpu());
+
+      // Effects keep track of their dependencies dynamically, and only track signals that were read in the most recent execution.
+      // if you'd do this the short way: if (this.drive() || this.ram() || this.gpu()) {
+      // The effect does not trigger when the second of third signal changes, since they were not read in that execution when first variable was already true!
+
+      // If needed in production, it is best to create 1 effect per signal (so here you'd have 3 effects)
+
+      const hasDrive = this.drive(); // Forces effect to read the value
+      const hasRam = this.ram(); // Forces effect to read the value
+      const hasGpu = this.gpu(); //Forces effect to read the value
+
+      if (hasDrive || hasRam || hasGpu) {
         alert('Price increased!');
       }
     });
