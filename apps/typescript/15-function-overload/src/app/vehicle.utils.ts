@@ -23,10 +23,27 @@ interface Bus {
 
 interface Boat {
   capacity: number;
+  fuel: Fuel;
   type: 'boat';
 }
 
 type Vehicle = Bicycle | Car | Moto | Bus | Boat;
+
+// OVERLOAD FUNCTIONS
+export function createVehicle(type: VehicleType): Bicycle;
+export function createVehicle(type: VehicleType, fuel: Fuel): Car;
+export function createVehicle(type: VehicleType, fuel: Fuel): Moto;
+export function createVehicle(
+  type: VehicleType,
+  fuel: Fuel,
+  capacity: number,
+  isPublicTransport: boolean,
+): Bus;
+export function createVehicle(
+  type: VehicleType,
+  fuel: Fuel,
+  capacity: number,
+): Boat;
 
 export function createVehicle(
   type: VehicleType,
@@ -44,12 +61,15 @@ export function createVehicle(
     case 'boat':
       if (!capacity)
         throw new Error(`capacity property is missing for type boat`);
-      return { capacity, type };
+      if (!fuel) throw new Error(`Fuel property is missing for type boat`);
+      return { capacity, fuel, type };
     case 'bus':
       if (!capacity)
         throw new Error(`capacity property is missing for type bus`);
       if (!isPublicTransport)
         throw new Error(`isPublicTransport property is missing for type bus`);
       return { capacity, isPublicTransport, type };
+    default:
+      throw new Error(`Unknown vehicle type: ${type}`);
   }
 }
