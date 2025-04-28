@@ -1,17 +1,23 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CardComponent } from './card.component';
+import {
+  CardComponent,
+  CardMessageDirective,
+  CardTitleDirective,
+} from './card.component';
 
 @Component({
-  imports: [CardComponent],
+  //import helper directives
+  imports: [CardComponent, CardTitleDirective, CardMessageDirective],
   selector: 'app-root',
   template: `
-    <app-card>
-      <div title>Card 1</div>
-      <div message>Message 1</div>
+    <app-card [small]="false">
+      <!-- Use ng-template with directive here instead of <div title></div> -->
+      <ng-template appCardTitle>Card 1</ng-template>
+      <ng-template appCardMessage>Message 1</ng-template>
     </app-card>
     <app-card [small]="true">
-      <div title>Card 2</div>
-      <div message>Message 2</div>
+      <ng-template appCardTitle>Card 2</ng-template>
+      <ng-template appCardMessage>Message 2</ng-template>
     </app-card>
   `,
   host: {
