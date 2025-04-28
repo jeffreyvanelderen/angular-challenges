@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { FormDeactivateCheck } from '../guards/form-deactivate.guard';
 import { FormComponent } from '../ui/form.component';
 
 @Component({
@@ -12,4 +13,13 @@ import { FormComponent } from '../ui/form.component';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JoinComponent {}
+export class JoinComponent implements FormDeactivateCheck {
+  // Get a reference of the child form component
+  formComponent = viewChild(FormComponent);
+
+  // Implemented via our own interface!
+  hasUnsavedChanges() {
+    // we expose isDirty in our form component
+    return !!this.formComponent()?.isDirty();
+  }
+}

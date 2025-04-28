@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-form',
@@ -70,6 +72,11 @@ export class FormComponent {
     phone: '',
     message: '',
   });
+
+  private isDirty$ = this.form.valueChanges.pipe(map(() => this.form.dirty));
+
+  // Expose to parent component which passes it to the canDeativate guard
+  public isDirty = toSignal(this.isDirty$);
 
   onSubmit() {
     if (this.form.valid) this.form.reset();
