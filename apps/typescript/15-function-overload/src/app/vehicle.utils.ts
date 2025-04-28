@@ -30,6 +30,12 @@ interface Boat {
 type Vehicle = Bicycle | Car | Moto | Bus | Boat;
 
 // OVERLOAD FUNCTIONS
+
+/*
+  When you overload in TypeScript, you only have ONE IMPLEMENTATION with MULTIPLE SIGNATURES.
+  Your implementation method still actually needs to dispatch different logic
+*/
+
 export function createVehicle(type: VehicleType): Bicycle;
 export function createVehicle(type: VehicleType, fuel: Fuel): Car;
 export function createVehicle(type: VehicleType, fuel: Fuel): Moto;
