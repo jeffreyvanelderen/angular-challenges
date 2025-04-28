@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { HeavyCalculationService } from './heavy-calculation.service';
 import { UnknownPersonComponent } from './unknown-person/unknown-person.component';
 
@@ -14,7 +14,10 @@ import { UnknownPersonComponent } from './unknown-person/unknown-person.componen
       (click)="discover()">
       Discover
     </button>
-    <div class="p-1 text-white">Progress: {{ loadingPercentage() }}%</div>
+    <div class="p-1 text-white">
+      Progress:
+      {{ workerLoadingPercentage() || loadingPercentage() }}%
+    </div>
   `,
   host: {
     class: `flex flex-col h-screen w-screen bg-[#1f75c0]`,
@@ -23,9 +26,24 @@ import { UnknownPersonComponent } from './unknown-person/unknown-person.componen
 export class AppComponent {
   private heavyCalculationService = inject(HeavyCalculationService);
 
-  readonly loadingPercentage = this.heavyCalculationService.loadingPercentage;
+  workerLoadingPercentage = signal(0);
+  loadingPercentage = signal(0);
 
   discover() {
-    this.heavyCalculationService.startLoading();
+    if (typeof Worker !== 'undefined') {
+      // Create a new
+      const worker = new Worker(
+        new URL('./heavy-calculation.worker', import.meta.url), // trigger heavy calculation worker
+      );
+      worker.onmessage = ({ data }) => {
+        this.workerLoadingPercentage.set(Math.round(data));
+        this.loadingPercentage.set(Math.round(data));
+      };
+      worker.postMessage('hello');
+    } else {
+      // Web Workers are not supported in this environment.
+      // You should add a fallback so that your program still executes correctly.
+      this.heavyCalculationService.startLoading();
+    }
   }
 }
