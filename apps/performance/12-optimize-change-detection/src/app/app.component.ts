@@ -1,6 +1,30 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  Component,
+  inject,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  Observable,
+  OperatorFunction,
+} from 'rxjs';
+
+function runInZone<T>(zone: NgZone): OperatorFunction<T, T> {
+  return (source) => {
+    return new Observable((observer) => {
+      return source.subscribe({
+        next: (value) => zone.run(() => observer.next(value)),
+        error: (e) => zone.run(() => observer.error(e)),
+        complete: () => zone.run(() => observer.complete()),
+      });
+    });
+  };
+}
 
 @Component({
   imports: [NgIf, AsyncPipe],
@@ -30,13 +54,34 @@ import { BehaviorSubject } from 'rxjs';
     `,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'scroll-cd';
 
-  private displayButtonSubject = new BehaviorSubject<boolean>(false);
-  displayButton$ = this.displayButtonSubject.asObservable();
+  listeners: (() => void)[] = [];
 
-  @HostListener('window:scroll', ['$event'])
+  zone = inject(NgZone);
+  renderer = inject(Renderer2);
+
+  private displayButtonSubject = new BehaviorSubject<boolean>(false);
+  displayButton$ = this.displayButtonSubject.pipe(
+    // Returns a result Observable that emits all values pushed by the
+    // source observable if they are distinct in comparison to the last value the result observable emitted.
+    distinctUntilChanged(),
+    runInZone(this.zone),
+  );
+
+  ngOnInit(): void {
+    this.zone.runOutsideAngular(() => {
+      this.listeners.push(
+        this.renderer.listen(window, 'scroll', this.onScroll),
+      );
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.listeners.forEach((unsub) => unsub());
+  }
+
   onScroll() {
     const pos = window.pageYOffset;
     this.displayButtonSubject.next(pos > 50);
