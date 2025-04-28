@@ -66,8 +66,8 @@ export class AppComponent implements OnInit, OnDestroy {
   displayButton$ = this.displayButtonSubject.pipe(
     // Returns a result Observable that emits all values pushed by the
     // source observable if they are distinct in comparison to the last value the result observable emitted.
-    distinctUntilChanged(),
-    runInZone(this.zone),
+    distinctUntilChanged(), // until changed from false to true or true to false
+    runInZone(this.zone), // then re-enter the zone
   );
 
   ngOnInit(): void {
