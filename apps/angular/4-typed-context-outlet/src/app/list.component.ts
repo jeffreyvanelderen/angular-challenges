@@ -1,20 +1,43 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
+  contentChild,
+  Directive,
+  input,
   Input,
   TemplateRef,
 } from '@angular/core';
 
+interface Context<T> {
+  $implicit: T;
+  appList: T;
+  index: number;
+}
+
+@Directive({
+  standalone: true,
+  selector: 'ng-template[appList]]',
+})
+export class ListDirective<T> {
+  appList = input.required<T[]>();
+
+  static ngTemplateContextGuard<TC>(
+    dir: ListDirective<TC>,
+    ctx: unknown,
+  ): ctx is Context<TC> {
+    return true;
+  }
+}
+
 @Component({
   selector: 'list',
-  imports: [CommonModule],
+  imports: [CommonModule, NgTemplateOutlet],
   template: `
     <div *ngFor="let item of list; index as i">
       <ng-container
         *ngTemplateOutlet="
-          listTemplateRef || emptyRef;
+          listTemplateRef() || emptyRef;
           context: { $implicit: item, appList: item, index: i }
         "></ng-container>
     </div>
@@ -26,6 +49,8 @@ import {
 export class ListComponent<TItem extends object> {
   @Input() list!: TItem[];
 
-  @ContentChild('listRef', { read: TemplateRef })
-  listTemplateRef!: TemplateRef<unknown>;
+  // Pass type here using ListDirective with generic type
+  readonly listTemplateRef = contentChild.required(ListDirective<TItem>, {
+    read: TemplateRef,
+  });
 }
