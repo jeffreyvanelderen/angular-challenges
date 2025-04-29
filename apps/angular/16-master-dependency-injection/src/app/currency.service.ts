@@ -26,4 +26,8 @@ export class CurrencyService extends ComponentStore<{ code: string }> {
   constructor() {
     super({ code: 'EUR' });
   }
+
+  public setCode(value: string) {
+    this.setState({ code: value });
+  }
 }
