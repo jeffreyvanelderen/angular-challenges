@@ -11,9 +11,9 @@ import { ListItemComponent } from '../list-item/list-item.component';
       <section>
         @for (item of list(); track item) {
           <app-list-item
-            [name]="item[listItemTitle()]"
+            [name]="getTitleForItem(item)"
             [id]="item.id"
-            (onDelete)="onDelete($event)"></app-list-item>
+            (onDelete)="onDelete(item)"></app-list-item>
         }
       </section>
 
@@ -26,20 +26,27 @@ import { ListItemComponent } from '../list-item/list-item.component';
   `,
   imports: [ListItemComponent],
 })
-export class CardComponent {
-  readonly list = input<any[] | null>(null);
+export class CardComponent<T extends { id: number }> {
+  readonly list = input<T[]>([]);
   readonly customClass = input('');
 
-  readonly listItemTitle = input('');
+  readonly listItemTitle = input<keyof T>();
 
   @Output() onAddNewItem: EventEmitter<null> = new EventEmitter<null>();
-  @Output() onDeleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() onDeleteItem: EventEmitter<T> = new EventEmitter<T>();
 
   addNewItem() {
     this.onAddNewItem.emit();
   }
 
-  onDelete(id: number) {
-    this.onDeleteItem.emit(id);
+  onDelete(item: T) {
+    this.onDeleteItem.emit(item);
+  }
+
+  getTitleForItem(item: T): string {
+    if (this.listItemTitle() && this.listItemTitle()! in item) {
+      return (item as any)[this.listItemTitle()];
+    }
+    return '';
   }
 }

@@ -4,6 +4,7 @@ import {
   FakeHttpService,
   randomCity,
 } from '../../data-access/fake-http.service';
+import { City } from '../../model/city.model';
 import { CardComponent } from '../../ui/card/card.component';
 
 @Component({
@@ -39,7 +40,7 @@ export class CityCardComponent {
     this.store.addOne(randomCity());
   }
 
-  onDeleteItem(id: number) {
+  onDeleteItem({ id }: City) {
     this.store.deleteOne(id);
   }
 }

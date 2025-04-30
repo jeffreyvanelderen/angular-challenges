@@ -9,6 +9,7 @@ import {
   randStudent,
 } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
+import { Student } from '../../model/student.model';
 import { CardComponent } from '../../ui/card/card.component';
 
 @Component({
@@ -51,7 +52,7 @@ export class StudentCardComponent implements OnInit {
     this.store.addOne(randStudent());
   }
 
-  onDeleteItem(id: number) {
+  onDeleteItem({ id }: Student) {
     this.store.deleteOne(id);
   }
 }
