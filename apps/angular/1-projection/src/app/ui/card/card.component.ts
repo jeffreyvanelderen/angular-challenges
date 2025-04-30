@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-output-on-prefix */
 import { Component, EventEmitter, input, Output } from '@angular/core';
 import { ListItemComponent } from '../list-item/list-item.component';
 
@@ -44,8 +45,9 @@ export class CardComponent<T extends { id: number }> {
   }
 
   getTitleForItem(item: T): string {
-    if (this.listItemTitle() && this.listItemTitle()! in item) {
-      return (item as any)[this.listItemTitle()];
+    const fieldName = this.listItemTitle();
+    if (fieldName && fieldName in item) {
+      return item[fieldName] as string;
     }
     return '';
   }
